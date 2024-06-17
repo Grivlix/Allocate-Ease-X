@@ -1,0 +1,105 @@
+h1 {
+    vertical-align: baseline;
+    margin-top: 0px;
+    padding-top: 100px;
+    padding: 2px;   
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.199);
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+p {
+    font-size: 20px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-image:url("../images/3.png");
+}
+
+div.NavBar {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+ul.NavBar {
+    text-align: center;
+    list-style-type: none;
+}
+
+.NavList {
+    display: inline;
+    font-size: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: #0A1C46;
+    border-radius: 5px;
+}
+
+
+.NavList a {
+    text-decoration: none;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+.NavList a:hover {
+    color: rgb(99, 99, 99);
+}
+div.PromptBox {
+    background-image: linear-gradient(to bottom left, #00C3CB, #0A1C46);
+    padding-top: 20px;
+    border-radius: 5px;
+    
+    text-align: center;
+    padding-bottom: 20px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+h2.PromptBox {
+    background-color: #0A1C46;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+
+    margin-left: 450px;
+    margin-right: 450px;
+}
+
+h3.PromptBox {
+    font-size: 30px;
+    padding-top: 50px;
+    padding-bottom: 70px;
+}
+
+
+
+.PromptForm [type=text] {
+    border: none;
+    outline: none;
+    width: 50%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    transition: padding-bottom .5s;
+    color: white;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 20px;
+}
+
+.PromptInput {
+    background-image: url("../images/2.png");
+}
+.PromptInput::placeholder {
+    color: white;
+}
+.PromptForm [type=text]:focus {
+    padding-bottom: 100px;
+}
