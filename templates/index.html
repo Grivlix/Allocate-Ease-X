@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AllocateX</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    <link rel="icon" type="image/x-icon" href="/static/images/icon1.ico">
 </head>
 <body>
     <div class="container">
@@ -14,8 +15,9 @@
         </header>
         <nav class="navbar">
             <ul>
-                <li><a href="index.html">AI Engine</a></li>
+                <li><a href="/">Sayj 1.0</a></li>
                 <li><a href="#">Employee SpreadSheet</a></li>
+                <li><a href="/projects">Projects</a></li>
             </ul>
         </nav>
         <section class="chat-section" id="chat-section">
@@ -23,7 +25,7 @@
             <div class="prompt-box" id="prompt-box">
                 <h3>What kind of worker are you looking for?</h3>
                 <input type="text" id="prompt-input" class="prompt-input" placeholder="Describe the type of worker you are looking for." />
-                <button class="submit-button" onclick="submitPrompt()">Submit</button>
+                <button class="submit-button" onclick=submitPrompt()>Submit</button>
             </div>
         </section>
     </div>

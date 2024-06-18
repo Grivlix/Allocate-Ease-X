@@ -1,10 +1,25 @@
 /* General Styles */
+*::-webkit-scrollbar {
+    height: 10px;
+    width: 16px;
+}
+
+*::-webkit-scrollbar-track {
+background: rgba(0, 0, 0, 0);
+background-color: #061028;
+}
+
+*::-webkit-scrollbar-thumb {
+background-color: #00C3CB;
+border-radius: 10px;
+border: 3px solid #0A1C46;
+}
 body {
     font-family: 'Lucida Sans', 'Arial', sans-serif;
     background: linear-gradient(to right, #00C3CB, #0A1C46);
     color: white;
     text-align: center;
-    margin: 0;
+    margin: 100px;
     padding: 0;
     height: 100vh;
     display: flex;
@@ -13,6 +28,7 @@ body {
 }
 
 .container {
+    position: absolute;
     width: 80%;
     max-width: 1200px;
     margin: 20px;
@@ -117,10 +133,6 @@ body {
     transition: all 0.3s ease;
 }
 
-.prompt-input:focus {
-    width: 90%;
-    padding-bottom: 20px;
-}
 
 .prompt-input::placeholder {
     color: white;
@@ -144,13 +156,23 @@ body {
     background: rgba(0, 0, 0, 0.3);
     padding: 15px;
     margin: 10px 0;
+    display: inline;
     border-radius: 10px;
     text-align: left;
 }
 
+.profile-card img {
+    width: 200px;
+    border-radius: 20PX;
+    margin-bottom: 20px;
+}
 .profile-card h3 {
     margin: 0;
     padding: 0;
+}
+
+.profile-role {
+    margin-bottom: 100px;
 }
 
 .profile-card p {

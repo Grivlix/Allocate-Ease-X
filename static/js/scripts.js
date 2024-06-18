@@ -1,9 +1,7 @@
 async function submitPrompt() {
     const promptInput = document.getElementById('prompt-input');
     const prompt = promptInput.value.trim(); // Trim whitespace from input
-
     if (!prompt) return; // Prevent empty submissions
-
     const response = await fetch('/api/recommend', {
         method: 'POST',
         headers: {
@@ -12,6 +10,7 @@ async function submitPrompt() {
         body: JSON.stringify({ prompt })
     });
 
+    
     if (response.ok) {
         const data = await response.json();
         addChatEntry(prompt, data);
@@ -31,12 +30,13 @@ function addChatEntry(prompt, data) {
     chatHistory.appendChild(userEntry);
 
     // Create bot response entry
+    let aiName = "Sayj 1.0";
     const botEntry = document.createElement('div');
     botEntry.className = 'chat-entry bot';
     botEntry.innerHTML = `
-        <h2>Top Recommendation</h2>
+        <h2>${aiName}: Top Recommendation</h2>
         ${createProfileCard(data.top)}
-        <h2>Other Relevant Options</h2>
+        <h2>${aiName}: Other Relevant Options</h2>
         ${data.others.map(profile => createProfileCard(profile)).join('')}
     `;
     chatHistory.appendChild(botEntry);
@@ -48,7 +48,9 @@ function addChatEntry(prompt, data) {
 function createProfileCard(profile) {
     return `
         <div class="profile-card">
+            <img src=${profile.image}>
             <h3>${profile.name}</h3>
+            <p class="profile-role"><strong>Role:</strong> ${profile.currentRole}</p>
             <p><strong>Experience:</strong> ${profile.experience}</p>
             <p><strong>Availability:</strong> ${profile.availability}</p>
             <p><strong>Skills:</strong> ${profile.skills.join(', ')}</p>

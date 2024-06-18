@@ -16,6 +16,9 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/projects')
+def projects():
+    return render_template("projects.html")
 
 @app.route('/api/recommend', methods=['POST'])
 def recommend():
@@ -25,24 +28,30 @@ def recommend():
     # Demo data
     employees = [
         {
+            "image": "/static/images/John.png",
             "name": "John Doe",
+            "currentRole": "Database Manager",
             "experience": "5 years",
             "availability": "40 hours/week",
-            "skills": ["Python", "JavaScript", "SQL"],
+            "skills": ["Python", "React", "SQL"],
             "previousProjects": ["Project Alpha", "Project Beta"]
         },
         {
+            "image": "/static/images/Jane.png",
             "name": "Jane Smith",
+            "currentRole": "Intermediate Website Developer",
             "experience": "3 years",
             "availability": "30 hours/week",
             "skills": ["Java", "C++", "HTML"],
             "previousProjects": ["Project Gamma", "Project Delta"]
         },
         {
+            "image": "/static/images/Emily.png",
             "name": "Emily Johnson",
-            "experience": "2 years",
-            "availability": "20 hours/week",
-            "skills": ["C#", "React", "CSS"],
+            "currentRole": "Senior Software Developer",
+            "experience": "10 years",
+            "availability": "15 hours/week",
+            "skills": ["C#", "JavaScript", "CSS"],
             "previousProjects": ["Project Epsilon", "Project Zeta"]
         }
     ]
