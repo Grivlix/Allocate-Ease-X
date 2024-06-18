@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Spreadsheet</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Employee Spreadsheet</h1>
+        <p>List of Employees</p>
+        <nav class="navbar">
+            <ul>
+                <li><a href="/">Sayj 1.0</a></li>
+                <li><a href="/spreadsheet">Employee SpreadSheet</a></li>
+                <li><a href="/projects">Projects</a></li>
+            </ul>
+        </nav>
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Employment Type</th>
+                        <th>Contact Info</th>
+                        <th>Available Hours/Week</th>
+                        <th>Utilization</th>
+                        <th>Skills</th>
+                        <th>Previous Projects</th>
+                        <th>Active Projects</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                    <tr class="{% if employee.availability.utilization < 0.4 %}utilization-low{% elif employee.availability.utilization < 0.7 %}utilization-medium{% else %}utilization-high{% endif %}">
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.job_title }}</td>
+                        <td>{{ employee.employment_type }}</td>
+                        <td>{{ employee.contact_info }}</td>
+                        <td>{{ employee.availability.hours_available }}</td>
+                        <td>{{ (employee.availability.utilization * 100)|round(0) }}%</td>
+                        <td>
+                            {% for skill in employee.skills %}
+                            {{ skill.skill_name }} ({{ skill.proficiency_level }})<br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for project in employee.projects %}
+                            {{ project.project.project_name }}<br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

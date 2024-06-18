@@ -14,6 +14,7 @@ background-color: #00C3CB;
 border-radius: 10px;
 border: 3px solid #0A1C46;
 }
+
 body {
     font-family: 'Lucida Sans', 'Arial', sans-serif;
     background: linear-gradient(to right, #00C3CB, #0A1C46);
@@ -156,15 +157,15 @@ body {
     background: rgba(0, 0, 0, 0.3);
     padding: 15px;
     margin: 10px 0;
-    display: inline;
+    display: linear;
     border-radius: 10px;
     text-align: left;
 }
 
 .profile-card img {
-    width: 200px;
-    border-radius: 20PX;
-    margin-bottom: 20px;
+    max-width: 100px;
+    border-radius: 25px;
+    margin-bottom: 15px;
 }
 .profile-card h3 {
     margin: 0;
@@ -177,4 +178,34 @@ body {
 
 .profile-card p {
     margin: 5px 0;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    max-width: 100%;
+    margin-top: 20px;
+}
+
+.table-sm th,
+.table-sm td {
+    padding: 0.75rem;
+    vertical-align: top;
+}
+
+/* Utilization levels background color */
+.utilization-low {
+    background-color: #dff0d8;  /* Light green */
+}
+
+.utilization-medium {
+    background-color: #fcf8e3;  /* Light yellow */
+}
+
+.utilization-high {
+    background-color: #f2dede;  /* Light red */
+}
+
+/* Hover effect on table rows */
+.table-striped tbody tr:hover {
+    background-color: #f1f1f1;
 }

@@ -1,66 +1,71 @@
 from flask import Flask, render_template, request, jsonify
-#from sqlalchemy import create_engine
-#from sqlalchemy.orm import sessionmaker
-#from setup_db import Base, Employee, Skill, Project  # Ensure correct import path
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, joinedload
+from setup_db import Base, Employee, Skill, Project, Availability
+import random
 
 app = Flask(__name__)
 
-# Configure the database (This is just for demonstration, you can keep your actual setup)
-#engine = create_engine('sqlite:///employees.db')
-#Base.metadata.bind = engine
-#DBSession = sessionmaker(bind=engine)
-#session = DBSession()
+# Configure the database (update the connection string as needed)
+engine = create_engine('sqlite:///employees.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/projects')
 def projects():
     return render_template("projects.html")
+
+
+@app.route('/spreadsheet')
+def show_spreadsheet():
+    employees = session.query(Employee).options(joinedload(Employee.availability)).all()
+    return render_template('spreadsheet.html', employees=employees)
+
+
 
 @app.route('/api/recommend', methods=['POST'])
 def recommend():
     data = request.json
     prompt = data.get("prompt")
 
-    # Demo data
-    employees = [
-        {
-            "image": "/static/images/John.png",
-            "name": "John Doe",
-            "currentRole": "Database Manager",
-            "experience": "5 years",
-            "availability": "40 hours/week",
-            "skills": ["Python", "React", "SQL"],
-            "previousProjects": ["Project Alpha", "Project Beta"]
-        },
-        {
-            "image": "/static/images/Jane.png",
-            "name": "Jane Smith",
-            "currentRole": "Intermediate Website Developer",
-            "experience": "3 years",
-            "availability": "30 hours/week",
-            "skills": ["Java", "C++", "HTML"],
-            "previousProjects": ["Project Gamma", "Project Delta"]
-        },
-        {
-            "image": "/static/images/Emily.png",
-            "name": "Emily Johnson",
-            "currentRole": "Senior Software Developer",
-            "experience": "10 years",
-            "availability": "15 hours/week",
-            "skills": ["C#", "JavaScript", "CSS"],
-            "previousProjects": ["Project Epsilon", "Project Zeta"]
-        }
-    ]
+    # Fetch all employees from the database
+    employees = session.query(Employee).all()
 
-    # Simulated response based on the prompt (simple logic for demonstration)
-    top_rec = employees[0]
-    others = employees[1:]
+    # Transform employee data to match the expected format
+    employee_data = []
+    for employee in employees:
+        skills = [{"skill_name": skill.skill_name, "proficiency_level": skill.proficiency_level} for skill in employee.skills]
+        previous_projects = [project.project.project_name for project in employee.projects if project.project.status == "Completed"]
+        active_projects = [project.project.project_name for project in employee.projects if project.project.status != "Completed"]
 
-    recommendations = {"top": top_rec, "others": others}
+        employee_data.append({
+            "image": employee.image,
+            "name": employee.name,
+            "job_title": employee.job_title,
+            "employment_type": employee.employment_type,
+            "contact_info": employee.contact_info,
+            "available_hours_per_week": employee.availability.hours_available,
+            "utilization": employee.availability.utilization,
+            "skills": skills,
+            "previous_projects": previous_projects,
+            "active_projects": active_projects
+        })
+
+    # Randomly select 3 employees
+    selected_employees = random.sample(employee_data, 3)
+
+    # Format the response
+    recommendations = {
+        "top": selected_employees[0],
+        "others": selected_employees[1:]
+    }
 
     return jsonify(recommendations)
 

@@ -10,7 +10,6 @@ async function submitPrompt() {
         body: JSON.stringify({ prompt })
     });
 
-    
     if (response.ok) {
         const data = await response.json();
         addChatEntry(prompt, data);
@@ -50,11 +49,14 @@ function createProfileCard(profile) {
         <div class="profile-card">
             <img src=${profile.image}>
             <h3>${profile.name}</h3>
-            <p class="profile-role"><strong>Role:</strong> ${profile.currentRole}</p>
-            <p><strong>Experience:</strong> ${profile.experience}</p>
-            <p><strong>Availability:</strong> ${profile.availability}</p>
-            <p><strong>Skills:</strong> ${profile.skills.join(', ')}</p>
-            <p><strong>Previous Projects:</strong> ${profile.previousProjects.join(', ')}</p>
+            <p class="profile-role"><strong>Role:</strong> ${profile.job_title}</p>
+            <p><strong>Employment Type:</strong> ${profile.employment_type}</p>
+            <p><strong>Contact Info:</strong> ${profile.contact_info}</p>
+            <p><strong>Available Hours/Week:</strong> ${profile.available_hours_per_week} hours/week</p>
+            <p><strong>Utilization:</strong> ${profile.utilization * 100}%</p>
+            <p><strong>Skills:</strong> ${profile.skills.map(skill => `${skill.skill_name} (${skill.proficiency_level})`).join(', ')}</p>
+            <p><strong>Previous Projects:</strong> ${profile.previous_projects.join(', ')}</p>
+            <p><strong>Active Projects:</strong> ${profile.active_projects.join(', ')}</p>
         </div>
     `;
 }
