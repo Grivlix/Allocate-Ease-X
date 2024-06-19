@@ -12,23 +12,18 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/projects')
 def projects():
     return render_template("projects.html")
 
-
 @app.route('/spreadsheet')
 def show_spreadsheet():
     employees = session.query(Employee).options(joinedload(Employee.availability)).all()
     return render_template('spreadsheet.html', employees=employees)
-
-
 
 @app.route('/api/recommend', methods=['POST'])
 def recommend():
@@ -55,7 +50,8 @@ def recommend():
             "utilization": employee.availability.utilization,
             "skills": skills,
             "previous_projects": previous_projects,
-            "active_projects": active_projects
+            "active_projects": active_projects,
+            "upcoming_leave": employee.availability.upcoming_leave  # Added upcoming leave info
         })
 
     # Randomly select 3 employees
@@ -68,7 +64,6 @@ def recommend():
     }
 
     return jsonify(recommendations)
-
 
 if __name__ == '__main__':
     app.run(debug=True)

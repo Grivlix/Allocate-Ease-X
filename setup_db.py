@@ -72,6 +72,7 @@ def add_sample_data():
     Session = sessionmaker(bind=engine)
     session = Session()
 
+
     sample_employees = [
         Employee(
             name="Kiara Bohringer",
