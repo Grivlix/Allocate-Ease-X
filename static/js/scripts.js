@@ -36,7 +36,9 @@ function addChatEntry(prompt, data) {
         <h2>${aiName}: Top Recommendation</h2>
         ${createProfileCard(data.top)}
         <h2>${aiName}: Other Relevant Options</h2>
-        ${data.others.map(profile => createProfileCard(profile)).join('')}
+        <div class="profile-card-container">
+            ${data.others.map(profile => createProfileCard(profile)).join('')}
+        </div>
     `;
     chatHistory.appendChild(botEntry);
 
@@ -45,14 +47,17 @@ function addChatEntry(prompt, data) {
 }
 
 function createProfileCard(profile) {
+    const hoursColor = getHoursColor(profile.available_hours_per_week);
+    const utilizationColor = getUtilizationColor(profile.utilization);
+
     return `
         <div class="profile-card">
             <img src=${profile.image}>
             <h3>${profile.name}</h3>
             <p class="profile-role"><strong>Role:</strong> ${profile.job_title}</p>
             <p><strong>Employment Type:</strong> ${profile.employment_type}</p>
-            <p><strong>Available Hours Per Week:</strong> ${profile.available_hours_per_week}</p>
-            <p><strong>Utilization:</strong> ${profile.utilization * 100} %</p>
+            <p><strong>Available Hours Per Week:</strong> <span style="color: ${hoursColor}">${profile.available_hours_per_week}</span></p>
+            <div class="utilization-chart" style="background: conic-gradient(${utilizationColor} 0% ${profile.utilization * 100}%, #ddd ${profile.utilization * 100}% 100%)"></div>
             <p><strong>Contact Info:</strong> ${profile.contact_info}</p>
             <p><strong>Upcoming Leave:</strong> ${profile.upcoming_leave}</p>
             <h4>Skills:</h4>
@@ -63,76 +68,74 @@ function createProfileCard(profile) {
             <ul>
                 ${profile.active_projects.map(project => `<li>${project}</li>`).join('')}
             </ul>
-            <h4>Previous Projects:</h4>
-            <ul>
-                ${profile.previous_projects.map(project => `<li>${project}</li>`).join('')}
-            </ul>
-            <div id="calendar-container-${profile.name}" class="calendar-container">
-                <!-- Placeholder for the calendar -->
-                <div class="calendar-header">
-                    <button class="calendar-btn prev-month" onclick="changeMonth('${profile.name}', -1)">&#10094;</button>
-                    <h3 class="calendar-month" id="calendar-month-${profile.name}"></h3>
-                    <button class="calendar-btn next-month" onclick="changeMonth('${profile.name}', 1)">&#10095;</button>
-                </div>
-                <div class="calendar-grid" id="calendar-grid-${profile.name}"></div>
-            </div>
+            <button onclick="openAssignForm(${profile.id})">Assign to Project</button>
         </div>
     `;
 }
 
-function initializeCalendar(profileName) {
-    const calendarMonth = document.getElementById(`calendar-month-${profileName}`);
-    const calendarGrid = document.getElementById(`calendar-grid-${profileName}`);
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-
-    renderCalendar(profileName, currentMonth, currentYear);
-}
-
-function renderCalendar(profileName, month, year) {
-    const calendarMonth = document.getElementById(`calendar-month-${profileName}`);
-    const calendarGrid = document.getElementById(`calendar-grid-${profileName}`);
-    const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    calendarMonth.innerText = `${monthNames[month]} ${year}`;
-    calendarGrid.innerHTML = ''; // Clear the calendar grid
-
-    // Fill in the days of the month
-    for (let i = 0; i < firstDay; i++) {
-        calendarGrid.innerHTML += '<div class="calendar-day empty"></div>';
-    }
-
-    for (let i = 1; i <= daysInMonth; i++) {
-        calendarGrid.innerHTML += `<div class="calendar-day">${i}</div>`;
+function getHoursColor(hours) {
+    if (hours <= 40) {
+        return 'green';
+    } else if (hours <= 70) {
+        return 'yellow';
+    } else {
+        return 'red';
     }
 }
 
-function changeMonth(profileName, direction) {
-    const calendarMonth = document.getElementById(`calendar-month-${profileName}`);
-    let [currentMonth, currentYear] = calendarMonth.innerText.split(' ');
-
-    const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-    let newMonth = monthNames.indexOf(currentMonth) + direction;
-    let newYear = parseInt(currentYear);
-
-    if (newMonth < 0) {
-        newMonth = 11;
-        newYear -= 1;
-    } else if (newMonth > 11) {
-        newMonth = 0;
-        newYear += 1;
+function getUtilizationColor(utilization) {
+    if (utilization <= 0.4) {
+        return 'green';
+    } else if (utilization <= 0.7) {
+        return 'yellow';
+    } else {
+        return 'red';
     }
+}
 
-    renderCalendar(profileName, newMonth, newYear);
+function openAssignForm(employeeId) {
+    const formHtml = `
+        <div class="assign-form">
+            <h3>Assign Employee to Project</h3>
+            <input type="hidden" id="assign-employee-id" value="${employeeId}">
+            <label for="project-id">Project ID:</label>
+            <input type="number" id="project-id" placeholder="Enter project ID">
+            <label for="task-hours">Task Hours:</label>
+            <input type="number" id="task-hours" placeholder="Enter task hours">
+            <button onclick="assignEmployee()">Assign</button>
+            <button onclick="closeAssignForm()">Cancel</button>
+        </div>
+    `;
+    const formContainer = document.getElementById('form-container');
+    formContainer.innerHTML = formHtml;
+}
+
+function closeAssignForm() {
+    const formContainer = document.getElementById('form-container');
+    formContainer.innerHTML = '';
+}
+
+async function assignEmployee() {
+    const employeeId = document.getElementById('assign-employee-id').value;
+    const projectId = document.getElementById('project-id').value;
+    const taskHours = document.getElementById('task-hours').value;
+
+    const response = await fetch('/assign', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            employee_id: employeeId,
+            project_id: projectId,
+            task_hours: taskHours
+        })
+    });
+
+    if (response.ok) {
+        alert('Employee assigned successfully!');
+        closeAssignForm();
+    } else {
+        console.error('Failed to assign employee');
+    }
 }

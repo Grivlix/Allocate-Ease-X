@@ -25,10 +25,11 @@
             <div class="prompt-box" id="prompt-box">
                 <h3>What kind of worker are you looking for?</h3>
                 <input type="text" id="prompt-input" class="prompt-input" placeholder="Describe the type of worker you are looking for." />
-                <button class="submit-button" onclick=submitPrompt()>Submit</button>
+                <button class="submit-button" onclick="submitPrompt()">Submit</button>
             </div>
         </section>
     </div>
     <script src="{{ url_for('static', filename='js/scripts.js')}}"></script>
+    <div id="form-container"></div>
 </body>
 </html>

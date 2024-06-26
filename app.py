@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, joinedload
-from setup_db import Base, Employee, Skill, Project, Availability
+from setup_db import Base, Employee, Skill, Project, Availability, EmployeeProjects
 import random
 
 app = Flask(__name__)
@@ -64,6 +64,33 @@ def recommend():
     }
 
     return jsonify(recommendations)
+
+@app.route('/assign', methods=['POST'])
+def assign_employee():
+    data = request.json
+    employee_id = data.get("employee_id")
+    project_id = data.get("project_id")
+    task_hours = data.get("task_hours")
+
+    # Find the employee and project in the database
+    employee = session.query(Employee).filter_by(id=employee_id).one()
+    project = session.query(Project).filter_by(id=project_id).one()
+
+    # Create a new EmployeeProjects entry
+    assignment = EmployeeProjects(
+        employee_id=employee.id,
+        project_id=project.id,
+        total_hours=task_hours,
+        hours_working=0,
+        hours_available=task_hours,
+        utilization=0.0
+    )
+
+    # Add and commit the new assignment
+    session.add(assignment)
+    session.commit()
+
+    return jsonify({"message": "Employee assigned successfully"})
 
 if __name__ == '__main__':
     app.run(debug=True)
